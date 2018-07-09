@@ -1,0 +1,88 @@
+html, body, main {
+    font-family: "Hanken Grotesk", sans-serif;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.loading {
+    text-align: center;
+    margin-top: calc( 50vh - 70px );
+}
+
+.loading .title {
+    font-size: 72pt;
+}
+
+img {
+  width: 100%;
+}
+
+p {
+  margin: 1rem 0;
+}
+
+blockquote {
+  color: gray;
+  border-left: 2px solid gray;
+  margin: 1rem 0;
+  padding: 0 0 0 1rem;
+}
+
+ul, ol {
+  margin: 1rem 0 1rem 1rem;
+  padding: 0 0 0 1rem;
+}
+
+.key {
+    text-align: right;
+    font-size: 8pt;
+    margin-right: 10px;
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+.messages {
+    margin: 10px;
+    height: calc(100% - 60px);
+    overflow-y: scroll;
+}
+
+.message-text {
+    display: block;
+    width: 300px;
+    vertical-align: top;
+}
+
+.message-user, .message-date{
+    color: grey;
+    font-size: 10pt;
+}
+
+.message-user {
+    margin-right: 30px;
+}
+
+.message-date {
+    margin-right: 10px;
+}
+
+.online {
+    color: green;
+}
+
+.offline {
+    color: red;
+}
+
+input {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+}

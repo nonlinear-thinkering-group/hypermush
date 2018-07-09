@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Pask</title>
+    <link rel="stylesheet" href="./fonts/stylesheet.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="loading">
+        <div class="title">
+            PASK
+        </div>
+        <div class="subtitle">
+            the algae project
+        </div>
+    </div>
+    <script>
+        const log = console.log
+        const m = require('mithril')
+        const _ = require('underscore')
+        const moment = require('moment')
+        const Dat = require('dat-node')
+        const fs = require('fs')
+
+        const model = require('./model.js')
+        const controller = require('./controller.js')
+
+        require('./renderer.js')
+    </script>
+  </body>
+</html>
