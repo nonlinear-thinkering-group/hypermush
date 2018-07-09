@@ -12,7 +12,7 @@ module.exports = {
     online: [], // array of online users
     trades: [],
     bag: [],
-    dungeon: ""
+    dungeon: "",
     map: [],
     position: [0,0]
 }
