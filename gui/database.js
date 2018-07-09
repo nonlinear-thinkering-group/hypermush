@@ -37,8 +37,8 @@ function connect(db){
         //broadcast everything
         getKey()
         getNames()
-        getColors()
         getMessages()
+        getMap()
 
         //watch changes
         db.watch('/names', function () {
@@ -124,15 +124,15 @@ function message(message){
 }
 
 function trade(trade) {
-  var k = crypt.randomString(64)
-  fs.readFile('./files/bag/'+trade, (err, data) => {
-    if (err) throw err
-    db.put('/trades/'+k, data, (err) => {
-      if (err) throw err
-      console.log(trade)
-      getTrades()
+    var k = crypt.randomString(64)
+    fs.readFile('./files/bag/'+trade, (err, data) => {
+        if (err) throw err
+        db.put('/trades/'+k, data, (err) => {
+            if (err) throw err
+            console.log(trade)
+            getTrades()
+        })
     })
-  })
 }
 
 function getTrades(){
@@ -144,6 +144,77 @@ function getTrades(){
       ev.emit('trades', trades)
     })
   }
+}
+
+function getMap(){
+    if(db){
+        let map = {}
+        db.list('/map/', (err, l)=>{
+            l.map((node)=>{
+                let coords = node[0].key.split("/")
+                let x = coords[1]
+                let y = coords[2]
+                if(map[x] === undefined) map[x] = {}
+                map[x][y] = node[0].value
+            })
+            ev.emit('map', map)
+        })
+    }
+}
+
+function registerDungeon(){
+    const dungeonDat = require("../files/dat.json")
+
+    //find empty spot
+    let map = {}
+    let registered = false
+    db.list('/map/', (err, l)=>{
+        //load map
+
+        l.map((node)=>{
+            let coords = node[0].key.split("/")
+            let x = coords[1]
+            let y = coords[2]
+            if(map[x] === undefined) map[x] = {}
+            map[x][y] = node[0].value
+            if(node[0].value === dungeonDat.url){
+                registered = true;
+            }
+        })
+
+        if(!registered){
+            //find an empty spot
+            let x = 0;
+            let y = 0;
+
+            if(Object.keys(map).length > 0) {
+                let emptyspots = []
+                Object.keys(map).map((kx)=>{
+                    Object.keys(map[kx]).map((ky)=>{
+                        let ix = parseInt(kx)
+                        let iy = parseInt(ky)
+
+
+                        if(map[ix-1] === undefined || map[ix-1][iy] === undefined){ emptyspots.push([ix-1,iy]) }
+                        if(map[ix+1] === undefined || map[ix+1][iy] === undefined){ emptyspots.push([ix+1,iy]) }
+                        if(map[ix] === undefined || map[ix][iy+1] === undefined){ emptyspots.push([ix,iy+1]) }
+                        if(map[ix] === undefined || map[ix][iy-1] === undefined){ emptyspots.push([ix,iy-1]) }
+
+                    })
+                })
+                let pick = Math.floor(Math.random()*emptyspots.length)
+                x = emptyspots[pick][0]
+                y = emptyspots[pick][1]
+            }
+
+            //store in empty spot
+            db.put('/map/'+x+'/'+y, dungeonDat.url, (err) => {
+                if (err) throw err
+            })
+        }
+
+    })
+
 }
 
 function on(tag, callback){
@@ -163,5 +234,7 @@ module.exports = {
     getTrades: getTrades,
     getMessages: getMessages,
     message: message,
+    getMap: getMap,
+    registerDungeon: registerDungeon,
     on: on
 }

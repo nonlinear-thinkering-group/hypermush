@@ -7,7 +7,8 @@ module.exports = {
     names: {}, // maps keys to usernames
     colors: {}, // maps keys to usernames
     online: [], // array of online users
-    trades: []
+    trades: [],
+    map: []
 }
 
 
@@ -15,6 +16,8 @@ module.exports = {
 database.getNames()
 database.getMessages()
 database.getTrades()
+
+database.getMap()
 
 //sync events
 database.on('load-space', (key) => {
@@ -41,6 +44,34 @@ database.on('messages', (messages) => {
         return new Date(a.date) - new Date(b.date)
     })
     console.log(messages)
+    m.redraw()
+})
+
+database.on('map', (mapobj) => {
+    let pos = [0,0]
+    let size = 10
+    let xarr = []
+    let yarr = []
+
+    for(let i = pos[0]-size; i<pos[0]+size; i++ ){
+        xarr.push(i)
+    }
+
+    for(let i = pos[1]-size; i<pos[1]+size; i++ ){
+        yarr.push(i)
+    }
+
+    model.map = xarr.map((x)=>{
+        return yarr.map((y)=>{
+            if(mapobj[x]){
+                if(mapobj[x][y]){
+                    return 1
+                }
+            }
+            return 0
+        })
+    })
+    console.log(model.map)
     m.redraw()
 })
 
