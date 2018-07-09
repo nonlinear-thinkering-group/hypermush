@@ -14,7 +14,9 @@ module.exports = {
     bag: [],
     dungeon: "",
     map: [],
-    position: [0,0]
+    mapobj: {},
+    position: [0,0],
+    dungeon_key: ""
 }
 
 //load data
@@ -53,6 +55,7 @@ database.on('messages', (messages) => {
 })
 
 database.on('map', (mapobj) => {
+    model.mapobj = mapobj
     let pos = [0,0]
     let size = 10
     let xarr = []
@@ -76,7 +79,10 @@ database.on('map', (mapobj) => {
             return 0
         })
     })
-    console.log(model.map)
+
+    //update dungeon key
+    model.dungeon_key = mapobj[model.position[0]][model.position[1]]
+
     m.redraw()
 })
 
@@ -90,5 +96,6 @@ controller.on('move', (dir)=> {
     let newpos = [model.position[0]+dir[0], model.position[1]+dir[1]]
     if(model.map[newpos[0]+10] && model.map[newpos[0]+10][newpos[1]+10]){
         model.position = newpos
+        model.dungeon_key = model.mapobj[model.position[0]][model.position[1]]
     }
 })
