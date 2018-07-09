@@ -1,6 +1,6 @@
 # Hypermush
 
-Multi User Shared Halucination using dat
+Multi User Shared Hallucination using dat
 
 ```
 npm install && npm start
