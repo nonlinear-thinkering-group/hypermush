@@ -29,11 +29,17 @@ const Message = {
 const Bag = {
   view: () => {
     return m("aside", [
-      m(".bag", model.trades.map((trade)=> {
-        return m("img", {
-          src: 'data:image/jpeg;base64,' + trade
-        })
-      }))
+      // bag
+      m(".bag", model.bag.map((item)=> {
+        return m("figure.bag-img", [
+          m("img", {
+            src: '../files/bag/' + item
+          }),
+          m("figcaption", item)
+        ])
+      })),
+      // dungeon
+      m(".dungeon", m.trust(md.render(model.dungeon)))
     ])
   }
 }

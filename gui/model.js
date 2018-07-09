@@ -1,4 +1,6 @@
 const database = require('./database')
+const bag = require('./bag')
+const dungeon = require('./dungeon')
 
 module.exports = {
     input: "", //value of input field
@@ -7,7 +9,9 @@ module.exports = {
     names: {}, // maps keys to usernames
     colors: {}, // maps keys to usernames
     online: [], // array of online users
-    trades: []
+    trades: [],
+    bag: [],
+    dungeon: ""
 }
 
 
@@ -15,6 +19,8 @@ module.exports = {
 database.getNames()
 database.getMessages()
 database.getTrades()
+bag.getItem((files) => { model.bag = files; m.redraw() })
+dungeon.descr((file) => { model.dungeon = file; m.redraw() })
 
 //sync events
 database.on('load-space', (key) => {
