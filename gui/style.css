@@ -1,4 +1,4 @@
-html, body, main {
+html, body {
     font-family: "Hanken Grotesk", sans-serif;
     margin: 0px;
     padding: 0px;
@@ -15,6 +15,21 @@ html, body, main {
 .loading .title {
     font-size: 72pt;
 }
+
+.wrap {
+  display: flex;
+}
+
+main {
+  width: 60%;
+}
+
+aside {
+  width: 40%;
+  border-left: 1px solid black;
+  height: calc(100vh - 37px);
+}
+
 
 img {
   width: 100%;

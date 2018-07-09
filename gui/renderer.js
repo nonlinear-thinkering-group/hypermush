@@ -40,7 +40,8 @@ const Bag = {
 
 const Hello = {
     view: () => {
-        return m("main", [
+      return m(".wrap", [
+        m("main", [
             m(".key", "your key: "+model.my_key),
             m(".messages", {
                 onupdate: (vnode)=>{
@@ -72,8 +73,10 @@ const Hello = {
                     }
                 }
             }),
-            m(Bag)
-        ])
+        ]),
+        m(Bag)
+      ])
+
     }
 }
 
