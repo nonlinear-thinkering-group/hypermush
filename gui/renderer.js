@@ -18,10 +18,6 @@ const Message = {
         let distance = vnode.attrs.distance
 
         return m(".message", [
-            //m("span.message-date", moment(message.date).format('DD-MM-YY HH:mm')),
-            //m("span.message-user", {
-            //    class: (model.online.indexOf(message.user)>-1)?"online":"offline"
-            //},"@"+ model.names[message.user]),
             m("div.message-text", {
                 style: "color: "+model.colors[message.user]+";" +
                        "margin-top: "+ distance + "px;"
@@ -44,7 +40,8 @@ const Bag = {
 
 const Hello = {
     view: () => {
-        return m("main", [
+      return m(".wrap", [
+        m("main", [
             m(".key", "your key: "+model.my_key),
             m(".messages", {
                 onupdate: (vnode)=>{
@@ -76,8 +73,10 @@ const Hello = {
                     }
                 }
             }),
-            m(Bag)
-        ])
+        ]),
+        m(Bag)
+      ])
+
     }
 }
 

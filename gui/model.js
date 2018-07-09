@@ -38,7 +38,6 @@ database.on('colors', (colors) => {
     m.redraw()
 })
 
-
 database.on('messages', (messages) => {
     model.messages = messages.sort((a,b)=>{
         return new Date(a.date) - new Date(b.date)
