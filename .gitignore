@@ -1,3 +1,5 @@
 node_modules
-dat/
+dat
 .dat
+dat.json
+files/bag

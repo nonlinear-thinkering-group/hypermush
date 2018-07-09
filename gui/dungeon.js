@@ -1,8 +1,14 @@
 const fs = require('fs')
+const datn = require('dat-node')
 
 function dungeon (cb) {
-  fs.readFile('./files/dungeon/dungeon.md', 'UTF-8', (err, file) => {
-    cb(file)
+  datn('./files/dungeon/downloads/' + model.dungeon_key, { key: model.dungeon_key }, function (err, dat) {
+    if (err) throw err
+    dat.joinNetwork()
+
+    dat.archive.readFile('/dungeon.md', function (err, file) => {
+      cb(file)
+    })
   })
 
 }

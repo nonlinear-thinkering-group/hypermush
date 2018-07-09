@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "cryptiles": "^4.1.1",
-    "dat-node": "^3.5.8",
+    "dat-node": "^3.5.11",
     "hyperdb": "^3.0.0-4",
     "hyperdiscovery": "^7.1.0",
     "markdown-it": "^8.4.1",
