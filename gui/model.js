@@ -1,4 +1,5 @@
 const database = require('./database')
+const controller = require('./controller')
 
 module.exports = {
     input: "", //value of input field
@@ -8,7 +9,8 @@ module.exports = {
     colors: {}, // maps keys to usernames
     online: [], // array of online users
     trades: [],
-    map: []
+    map: [],
+    position: [0,0]
 }
 
 
@@ -16,7 +18,6 @@ module.exports = {
 database.getNames()
 database.getMessages()
 database.getTrades()
-
 database.getMap()
 
 //sync events
@@ -78,4 +79,11 @@ database.on('trades', (trades) => {
     model.trades = trades
     console.log(trades)
     m.redraw()
+})
+
+controller.on('move', (dir)=> {
+    let newpos = [model.position[0]+dir[0], model.position[1]+dir[1]]
+    if(model.map[newpos[0]+10] && model.map[newpos[0]+10][newpos[1]+10]){
+        model.position = newpos
+    }
 })
