@@ -34,6 +34,9 @@ function connect(db){
             })
         })
 
+        //register dungeon
+        registerDungeon()
+
         //broadcast everything
         getKey()
         getNames()
@@ -47,6 +50,10 @@ function connect(db){
 
         db.watch('/messages', function () {
             getMessages()
+        })
+
+        db.watch('/map', function () {
+            getMap()
         })
     })
 }
