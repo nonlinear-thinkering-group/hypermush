@@ -17,7 +17,6 @@ module.exports = {
     position: [0,0]
 }
 
-
 //load data
 database.getNames()
 database.getMessages()
