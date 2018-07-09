@@ -48,6 +48,20 @@ module.exports = {
             ipc.send('set-color', cmd[1])
             return false
         }
+
+      if(cmd[0]==="/trade"){
+        const filename = cmd[1]
+        fs.readdir('./files/bag/', (err, files) => {
+          if (files.find((f)=> {
+            return f===filename
+          })){
+          ipc.send('set-trade', cmd[1])
+          return false
+          }
+        })
+        
+      }
+
     },
     //loadlisteners: ()=>{
     //    fs.readFile("./dat/listening.json", "utf8", (err, data)=>{

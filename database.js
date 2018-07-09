@@ -1,3 +1,4 @@
+const fs = require('fs')
 const hyperdb = require('hyperdb')
 const discovery = require('hyperdiscovery')
 const events = require('events');
@@ -122,12 +123,32 @@ function message(message){
     })
 }
 
+function trade(trade) {
+  var k = crypt.randomString(64)
+  fs.readFile('./files/bag/'+trade, (err, data) => {
+    if (err) throw err
+    db.put('/trades/'+k, data, (err) => {
+      if (err) throw err
+      console.log(trade)
+      getTrades()
+    })
+  })
+}
 
+function getTrades(){
+  if(db){
+    db.list('/trades/', (err, l)=>{
+      var trades = l.map((node)=>{
+        return node[0].value
+      })
+      ev.emit('trades', trades)
+    })
+  }
+}
 
 function on(tag, callback){
     ev.on(tag, callback)
 }
-
 
 module.exports = {
     create: create,
@@ -138,6 +159,8 @@ module.exports = {
     getColors: getColors,
     setColor: setColor,
     setAuth: setAuth,
+    trade: trade,
+    getTrades: getTrades,
     getMessages: getMessages,
     message: message,
     on: on

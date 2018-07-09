@@ -109,6 +109,10 @@ function connectDat(){
         database.setAuth(arg)
     })
 
+    ipc.on('set-trade', (e, arg) => {
+        database.trade(arg)
+    })
+
     ipc.on('message', (e, arg) => {
         database.message(arg)
     })
@@ -145,6 +149,14 @@ function connectDat(){
         }
         showNotification()
     })
+
+    database.on('trades', (a)=>{
+        if(mainWindow){
+            mainWindow.webContents.send('trades', a)
+        }
+        showNotification()
+    })
+    
 }
 
 app.on('ready', ()=>{

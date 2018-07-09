@@ -30,6 +30,18 @@ const Message = {
     }
 }
 
+const Bag = {
+  view: () => {
+    return m("aside", [
+      m(".bag", model.trades.map((trade)=> {
+        return m("img", {
+          src: 'data:image/jpeg;base64,' + trade
+        })
+      }))
+    ])
+  }
+}
+
 const Hello = {
     view: () => {
         return m("main", [
@@ -64,6 +76,7 @@ const Hello = {
                     }
                 }
             }),
+            m(Bag)
         ])
     }
 }

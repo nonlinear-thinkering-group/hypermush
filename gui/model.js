@@ -7,6 +7,7 @@ module.exports = {
     names: {}, // maps keys to usernames
     colors: {}, // maps keys to usernames
     online: [], // array of online users
+    trades: []
 }
 
 //sync events
@@ -34,5 +35,11 @@ ipc.on('messages', (e, messages) => {
         return new Date(a.date) - new Date(b.date)
     })
     console.log(messages)
+    m.redraw()
+})
+
+ipc.on('trades', (e, trades) => {
+    model.trades = trades
+    console.log(trades)
     m.redraw()
 })
