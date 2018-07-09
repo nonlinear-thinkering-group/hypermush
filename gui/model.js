@@ -24,7 +24,7 @@ database.getNames()
 database.getMessages()
 database.getTrades()
 bag.getItem((files) => { model.bag = files; m.redraw() })
-dungeon.descr((file) => { model.dungeon = file; m.redraw() })
+dungeon.descr((file) => { model.dungeon = file })
 database.getMap()
 
 //sync events
