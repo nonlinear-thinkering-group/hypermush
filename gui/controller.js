@@ -53,13 +53,4 @@ module.exports = {
         }
 
     },
-    //loadlisteners: ()=>{
-    //    fs.readFile("./dat/listening.json", "utf8", (err, data)=>{
-    //        if(err) throw err
-    //        model.listening = JSON.parse(data)
-    //        model.listening.map((o)=>{
-    //            connection.listen(o)
-    //        })
-    //    })
-    //},
 }
