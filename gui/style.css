@@ -102,6 +102,31 @@ ul, ol {
     color: red;
 }
 
+
+.map {
+    width: 300px;
+}
+
+.map-row {
+    height: 10px;
+}
+
+.map-box {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+}
+
+.map-box.here {
+    border: 1px solid red;
+    width: 8px;
+    height: 8px;
+}
+
+.dungeon0 {
+    background-color: black;
+}
+
 input {
     position: absolute;
     bottom: 0px;

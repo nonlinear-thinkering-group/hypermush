@@ -44,6 +44,18 @@ const Bag = {
   }
 }
 
+const Map = {
+    view: () => {
+        return m(".map", model.map.map((x, i) => {
+            return m(".map-row", x.map((y, j) => {
+                return m(".map-box", {
+                    class: "dungeon"+ (y?1:0) + " " + ((model.position[0]+10===i && model.position[1]+10===j)?"here": "")
+                }," ")
+            }))
+        }))
+    }
+}
+
 const Hello = {
     view: () => {
       return m(".wrap", [
@@ -80,7 +92,8 @@ const Hello = {
                 }
             }),
         ]),
-        m(Bag)
+        m(Bag),
+        m(Map)
       ])
 
     }

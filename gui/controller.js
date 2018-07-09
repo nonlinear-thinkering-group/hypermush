@@ -1,5 +1,8 @@
 var publish_dat;
 const database = require('./database')
+const events = require('events')
+
+var ev = new events.EventEmitter();
 
 module.exports = {
     message: (message)=>{
@@ -52,5 +55,23 @@ module.exports = {
             })
         }
 
+        if(cmd[0]==="/n"){
+            ev.emit("move", [-1,0])
+        }
+
+        if(cmd[0]==="/e"){
+            ev.emit("move", [0,1])
+        }
+
+        if(cmd[0]==="/s"){
+            ev.emit("move", [1,0])
+        }
+
+        if(cmd[0]==="/w"){
+            ev.emit("move", [0,-1])
+        }
     },
+    on: (tag, callback) => {
+        ev.on(tag, callback)
+    }
 }
