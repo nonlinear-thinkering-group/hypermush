@@ -1,4 +1,4 @@
-var ipc = require('electron').ipcRenderer;
+const database = require('./database')
 
 module.exports = {
     input: "", //value of input field
@@ -10,27 +10,33 @@ module.exports = {
     trades: []
 }
 
+
+//load data
+database.getNames()
+database.getMessages()
+database.getTrades()
+
 //sync events
-ipc.on('load-space', (e, key) => {
+database.on('load-space', (key) => {
     console.log(key)
     model.my_key = key
     m.redraw()
 })
 
-ipc.on('names', (e, names) => {
+database.on('names', (names) => {
     model.names = _.object(names)
     console.log(names)
     m.redraw()
 })
 
-ipc.on('colors', (e, colors) => {
+database.on('colors', (colors) => {
     model.colors = _.object(colors)
     console.log(colors)
     m.redraw()
 })
 
 
-ipc.on('messages', (e, messages) => {
+database.on('messages', (messages) => {
     model.messages = messages.sort((a,b)=>{
         return new Date(a.date) - new Date(b.date)
     })
@@ -38,7 +44,7 @@ ipc.on('messages', (e, messages) => {
     m.redraw()
 })
 
-ipc.on('trades', (e, trades) => {
+database.on('trades', (trades) => {
     model.trades = trades
     console.log(trades)
     m.redraw()

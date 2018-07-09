@@ -1,5 +1,5 @@
 var publish_dat;
-var ipc = require('electron').ipcRenderer;
+const database = require('./database')
 
 module.exports = {
     message: (message)=>{
@@ -14,53 +14,43 @@ module.exports = {
                 date: new Date(),
                 user: model.my_key
             }
-            ipc.send('message', me)
-            //model.messages.here.push(me)
-            //ipc.send('message', me)
-            //connection.write(JSON.stringify(model.messages.here))
-            //module.exports.mergeMessages()
+            database.message(me)
         }
 
     },
     command: (message, key)=>{
         const cmd = message.split(" ")
         if(cmd[0]==="/host"){
-            ipc.send('new-space', cmd[1])
+            database.create(cmd[1])
             return false
         }
 
         if(cmd[0]==="/join"){
-            ipc.send('listen-space', cmd[1])
+            database.listen(cmd[1])
             return false
         }
 
         if(cmd[0]==="/auth"){
-            ipc.send('set-auth', cmd[1])
+            database.setAuth(cmd[1])
             return false
         }
 
         if(cmd[0]==="/name"){
-            ipc.send('set-name', cmd[1])
+            database.setName(cmd[1])
             return false
         }
 
-        if(cmd[0]==="/color"){
-            ipc.send('set-color', cmd[1])
-            return false
+        if(cmd[0]==="/trade"){
+            const filename = cmd[1]
+            fs.readdir('./files/bag/', (err, files) => {
+                if (files.find((f)=> {
+                    return f===filename
+                })){
+                    database.trade(cmd[1])
+                    return false
+                }
+            })
         }
-
-      if(cmd[0]==="/trade"){
-        const filename = cmd[1]
-        fs.readdir('./files/bag/', (err, files) => {
-          if (files.find((f)=> {
-            return f===filename
-          })){
-          ipc.send('set-trade', cmd[1])
-          return false
-          }
-        })
-        
-      }
 
     },
     //loadlisteners: ()=>{
@@ -73,5 +63,3 @@ module.exports = {
     //    })
     //},
 }
-
-ipc.send('sync') //attempt to load data
