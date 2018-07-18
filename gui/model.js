@@ -24,7 +24,6 @@ let model = {
 
 //load data
 database.getNames()
-database.getMessages()
 database.getTrades()
 bag.getItem((files) => { model.bag = files; m.redraw() })
 database.getMap()
@@ -87,6 +86,8 @@ database.on('map', (mapobj) => {
     model.dungeon_key = mapobj[model.position[0]][model.position[1]]
     dungeon.load_dungeon(model.dungeon_key, (file)=>{
         model.dungeon = file
+        database.getMessages(model.dungeon_key)
+        controller.message("_enters the room_", model.dungeon_key)
         m.redraw()
     })
     m.redraw()
@@ -101,11 +102,14 @@ database.on('trades', (trades) => {
 controller.on('move', (dir)=> {
     let newpos = [model.position[0]+dir[0], model.position[1]+dir[1]]
     if(model.map[newpos[0]+10] && model.map[newpos[0]+10][newpos[1]+10]){
+        controller.message("_leaves the room_", model.dungeon_key)
         model.position = newpos
         model.dungeon_key = model.mapobj[model.position[0]][model.position[1]]
 
         dungeon.load_dungeon(model.dungeon_key, (file)=>{
             model.dungeon = file
+            database.getMessages(model.dungeon_key)
+            controller.message("_enters the room_", model.dungeon_key)
             m.redraw()
         })
     }

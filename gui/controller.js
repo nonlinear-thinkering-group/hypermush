@@ -5,7 +5,7 @@ const events = require('events')
 var ev = new events.EventEmitter();
 
 module.exports = {
-    message: (message)=>{
+    message: (message, room)=>{
         var write = true;
         if(message.charAt(0)==="/"){
             write = module.exports.command(message, model.my_key)
@@ -17,7 +17,7 @@ module.exports = {
                 date: new Date(),
                 user: model.my_key
             }
-            database.message(me)
+            database.message(me, room)
         }
 
     },

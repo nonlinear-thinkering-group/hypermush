@@ -18,6 +18,7 @@ const Message = {
         let distance = vnode.attrs.distance
 
         return m(".message", [
+            m(".message-user",model.names[message.user]),
             m("div.message-text", {
                 style: "color: "+model.colors[message.user]+";"
             },m.trust( md.render(message.text) )),
@@ -85,7 +86,7 @@ const Hello = {
                 },
                 onkeypress: (e)=>{
                     if(e.key === "Enter" && model.input !== ""){
-                        controller.message(model.input)
+                        controller.message(model.input, model.dungeon_key)
                         model.input = ""
                         m.redraw()
                     }

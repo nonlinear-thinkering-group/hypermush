@@ -1,9 +1,9 @@
 const fs = require('fs')
 const datn = require('dat-node')
 
-
 function load_dungeon (dungeon_key, callback) {
-      let key = model.dungeon_key.substring(6)
+    console.log(dungeon_key)
+      let key = dungeon_key
       datn('./map/' + key, { key: key }, function (err, dat) {
         if (err) throw err
         dat.joinNetwork()

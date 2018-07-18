@@ -84,7 +84,7 @@ function connect(db){
         })
 
         db.watch('/messages', function () {
-            getMessages()
+            getMessages(model.dungeon_key)
         })
 
         db.watch('/map', function () {
@@ -147,9 +147,9 @@ function setAuth(key){
     })
 }
 
-function getMessages(){
-    if(db){
-        db.list('/messages/', (err, l)=>{
+function getMessages(room){
+    if(room && db){
+        db.list('/messages/'+room+'/', (err, l)=>{
             var messages = l.map((node)=>{
                 return JSON.parse(node[0].value)
             })
@@ -158,9 +158,10 @@ function getMessages(){
     }
 }
 
-function message(message){
+function message(message, room){
+    console.log(room)
     var k = crypt.randomString(64)
-    db.put('/messages/'+k, JSON.stringify(message), (err)=>{
+    db.put('/messages/'+room+'/'+k, JSON.stringify(message), (err)=>{
         if (err) throw err
         getMessages()
     })
@@ -207,7 +208,7 @@ function getMap(){
 
 function registerDungeon(){
     const dungeonDat = require("../files/dat.json")
-
+    let url = dungeonDat.url.substring(6)
     //find empty spot
     let map = {}
     let registered = false
@@ -220,7 +221,7 @@ function registerDungeon(){
             let y = coords[2]
             if(map[x] === undefined) map[x] = {}
             map[x][y] = node[0].value
-            if(node[0].value === dungeonDat.url){
+            if(node[0].value === url){
                 registered = true;
             }
         })
@@ -251,7 +252,7 @@ function registerDungeon(){
             }
 
             //store in empty spot
-            db.put('/map/'+x+'/'+y, dungeonDat.url, (err) => {
+            db.put('/map/'+x+'/'+y, url, (err) => {
                 if (err) throw err
             })
         }
