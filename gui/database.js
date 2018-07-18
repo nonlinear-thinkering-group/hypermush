@@ -1,6 +1,10 @@
 const fs = require('fs')
 const hyperdb = require('hyperdb')
 const discovery = require('hyperdiscovery')
+
+//var discovery = require('discovery-swarm')
+//var swarmDefaults = require('dat-swarm-defaults')
+
 const events = require('events');
 const crypt = require("cryptiles")
 
@@ -26,12 +30,43 @@ function connect(db){
     db.on('ready', ()=>{
         key = db.key.toString('hex')
         lkey = db.local.key.toString('hex')
-        swarm = discovery(db)
+
+        //pass values for auto authorize
+        swarm = discovery(db, {
+            stream: function (peer) {
+                return db.replicate({
+                    live: true, upload: true, download: true,
+                    userData: JSON.stringify({
+                        key: db.local.key
+                    })
+                })
+            }
+        })
+
         swarm.on('connection', (peer, type)=>{
             console.log("new connection: "+peer.key.toString('hex'))
             peer.on('close', ()=>{
-
+                console.log("closed connection: "+peer.key.toString('hex'))
             })
+
+
+
+            //auto authorize
+            if (peer.remoteUserData !== undefined){
+                let data
+                try { data = JSON.parse(peer.remoteUserData) } catch (err) { return console.log(err)}
+                let key = Buffer.from(data.key)
+                let username = data.username
+                db.authorized(key, function (err, auth) {
+                    if (err) return console.log(err)
+                    if (!auth) {
+                        db.authorize(key, function (err) {
+                            if (err) return console.log(err)
+                        })
+                    }
+              })
+            }
+
         })
 
         //register dungeon

@@ -15,8 +15,6 @@ function dungeon (cb) {
       })
     })
   })
-
 }
 
 module.exports = { descr: dungeon }
-
