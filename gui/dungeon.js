@@ -17,4 +17,15 @@ function dungeon (cb) {
   })
 }
 
-module.exports = { descr: dungeon }
+function host(){
+    datn('./files/', function(err, dat){
+        dat.importFiles()
+        dat.joinNetwork()
+        console.log('My Dungeon link is: dat://', dat.key.toString('hex'))
+    })
+}
+
+module.exports = {
+    descr: dungeon,
+    host: host
+}
