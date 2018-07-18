@@ -25,9 +25,8 @@ let model = {
 //load data
 database.getNames()
 database.getTrades()
-bag.getItem((files) => { model.bag = files; m.redraw() })
 database.getMap()
-
+bag.getItem()
 
 //sync events
 database.on('load-space', (key) => {
@@ -35,6 +34,8 @@ database.on('load-space', (key) => {
     model.my_key = key
     m.redraw()
 })
+
+bag.on('load_bag', files => {model.bag = files; m.redraw()})
 
 database.on('names', (names) => {
     model.names = _.object(names)

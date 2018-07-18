@@ -1,6 +1,7 @@
 var publish_dat;
 const database = require('./database')
 const events = require('events')
+const bag = require('./bag')
 
 var ev = new events.EventEmitter();
 
@@ -45,16 +46,9 @@ module.exports = {
             return false
         }
 
-        if(cmd[0]==="/trade"){
+        if(cmd[0]==="/drop"){
             const filename = cmd[1]
-            fs.readdir('./files/bag/', (err, files) => {
-                if (files.find((f)=> {
-                    return f===filename
-                })){
-                    database.trade(cmd[1])
-                    return false
-                }
-            })
+            bag.drop(filename)
         }
 
         if(cmd[0]==="/n"){

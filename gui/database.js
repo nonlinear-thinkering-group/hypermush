@@ -167,15 +167,11 @@ function message(message, room){
     })
 }
 
-function trade(trade) {
+function drop(drop, room) {
     var k = crypt.randomString(64)
-    fs.readFile('./files/bag/'+trade, (err, data) => {
+    db.put('/drop/'+room+'/'+k, drop, (err) => {
         if (err) throw err
-        db.put('/trades/'+k, data, (err) => {
-            if (err) throw err
-            console.log(trade)
-            getTrades()
-        })
+        getTrades()
     })
 }
 
@@ -274,7 +270,7 @@ module.exports = {
     getColors: getColors,
     setColor: setColor,
     setAuth: setAuth,
-    trade: trade,
+    drop: drop,
     getTrades: getTrades,
     getMessages: getMessages,
     message: message,
