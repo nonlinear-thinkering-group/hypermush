@@ -70,7 +70,6 @@ const Hello = {
                 if(id>0){
                     let prevdate = model.messages[id-1].date
                     let datedistance = new Date(message.date) - new Date(prevdate)
-                    console.log(message.date, datedistance)
                     distance = Math.floor(datedistance/1000)
                     if(distance > 1000) {
                         distance = 1000

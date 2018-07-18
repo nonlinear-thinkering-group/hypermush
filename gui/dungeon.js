@@ -5,7 +5,7 @@ const controller = require('./controller')
 
 function dungeon (cb) {
   controller.on('move', () => {
-    datn('./files/dungeon/downloads/' + model.dungeon_key, { key: model.dungeon_key }, function (err, dat) {
+    datn('./map/downloads/' + model.dungeon_key, { key: model.dungeon_key }, function (err, dat) {
       if (err) throw err
       dat.joinNetwork()
 
@@ -17,4 +17,15 @@ function dungeon (cb) {
   })
 }
 
-module.exports = { descr: dungeon }
+function host(){
+    datn('./files/', function(err, dat){
+        dat.importFiles()
+        dat.joinNetwork()
+        console.log('My Dungeon link is: dat://', dat.key.toString('hex'))
+    })
+}
+
+module.exports = {
+    descr: dungeon,
+    host: host
+}

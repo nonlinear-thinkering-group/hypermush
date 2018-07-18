@@ -3,7 +3,7 @@ const bag = require('./bag')
 const dungeon = require('./dungeon')
 const controller = require('./controller')
 
-module.exports = {
+let model = {
     input: "", //value of input field
     my_key: "", // current key
     messages: [], // all the messages
@@ -24,6 +24,7 @@ database.getNames()
 database.getMessages()
 database.getTrades()
 bag.getItem((files) => { model.bag = files; m.redraw() })
+dungeon.host()
 dungeon.descr((file) => { model.dungeon = file })
 database.getMap()
 
@@ -80,9 +81,9 @@ database.on('map', (mapobj) => {
         })
     })
 
+    console.log(mapobj, model.position)
     //update dungeon key
     model.dungeon_key = mapobj[model.position[0]][model.position[1]]
-
     m.redraw()
 })
 
@@ -99,3 +100,5 @@ controller.on('move', (dir)=> {
         model.dungeon_key = model.mapobj[model.position[0]][model.position[1]]
     }
 })
+
+module.exports = model
