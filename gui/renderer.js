@@ -26,7 +26,7 @@ const Message = {
     }
 }
 
-const Bag = {
+const Aside = {
   view: () => {
     return m("aside", [
       // bag
@@ -39,7 +39,9 @@ const Bag = {
         ])
       })),
       // dungeon
-      m(".dungeon", m.trust(md.render(model.dungeon)))
+      m(".dungeon", m.trust(md.render(model.dungeon))),
+      // map
+      m(Map)
     ])
   }
 }
@@ -91,8 +93,7 @@ const Hello = {
                 }
             }),
         ]),
-        m(Bag),
-        m(Map)
+        m(Aside)
       ])
 
     }
