@@ -49,6 +49,8 @@ module.exports = {
         if(cmd[0]==="/drop"){
             const filename = cmd[1]
             bag.drop(filename)
+
+            module.exports.message('*dropped ' + filename + '*', model.dungeon_key)
         }
 
         if(cmd[0]==="/n"){
