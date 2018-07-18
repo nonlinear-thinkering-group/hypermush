@@ -17,8 +17,8 @@ function drop (filename) {
       database.drop(filename, model.dungeon_key)
       fs.rename('./files/bag/' + filename, './files/drop/' + filename, (err) => {
           if (err) throw err
+          bag()
       })
-      bag()
       return false
     }
   })
