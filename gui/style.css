@@ -1,6 +1,6 @@
 *, *:before, *:after {
-  -webkit-box-sizing: border-box; 
-  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -133,7 +133,7 @@ input {
   vertical-align: top;
 }
 
-.message-user, 
+.message-user,
 .message-date {
   color: grey;
   font-size: 10pt;
@@ -156,25 +156,25 @@ input {
 }
 
 .map {
-  width: 300px;
+  width: 100%;
 }
 
 .map-row {
-  height: 10px;
+  height: 5%;
 }
 
 .map-box {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 5%;
+  height: 5%;
+  color: white;
 }
 
 .map-box.here {
-  border: 1px solid red;
-  width: 8px;
-  height: 8px;
+    box-shadow: inset 0px 0px 4px red;
 }
 
 .dungeon0 {
   background-color: black;
+  color: black;
 }
