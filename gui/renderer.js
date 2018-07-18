@@ -39,7 +39,7 @@ const Aside = {
         ])
       })),
       // dungeon
-      m(".dungeon", m.trust(md.render(model.dungeon))),
+      m(".dungeon", m.trust( md.render(model.dungeon) )),
       // map
       m(Map)
     ])
