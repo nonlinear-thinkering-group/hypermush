@@ -25,7 +25,7 @@ database.getMessages()
 database.getTrades()
 bag.getItem((files) => { model.bag = files; m.redraw() })
 dungeon.host()
-dungeon.descr((file) => { model.dungeon = file })
+dungeon.descr((file) => { model.dungeon = file }, model)
 database.getMap()
 
 //sync events
@@ -81,7 +81,6 @@ database.on('map', (mapobj) => {
         })
     })
 
-    console.log(mapobj, model.position)
     //update dungeon key
     model.dungeon_key = mapobj[model.position[0]][model.position[1]]
     m.redraw()

@@ -1,11 +1,11 @@
 const fs = require('fs')
 const datn = require('dat-node')
-const model = require('./model')
 const controller = require('./controller')
 
-function dungeon (cb) {
+function dungeon (cb, model) {
   controller.on('move', () => {
-    datn('./map/' + model.dungeon_key, { key: model.dungeon_key }, function (err, dat) {
+    let key = model.dungeon_key.substring(6)
+    datn('./map/' + key, { key: key }, function (err, dat) {
       if (err) throw err
       dat.joinNetwork()
 
