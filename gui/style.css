@@ -133,7 +133,8 @@ input {
   vertical-align: top;
 }
 
-.message-user, .message-date{
+.message-user, 
+.message-date {
   color: grey;
   font-size: 10pt;
 }

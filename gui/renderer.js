@@ -31,7 +31,7 @@ const Chat = {
           }
         }
         return m(Message, {message: message, distance: distance})
-      })),
+      }))
     ]) 
   }
 }
@@ -42,9 +42,9 @@ const Message = {
         let distance = vnode.attrs.distance
 
         return m(".message", [
+            m(".message-user",model.names[message.user]),
             m("div.message-text", {
-                style: "color: "+model.colors[message.user]+";" //+
-                       //"margin-top: "+ distance + "px;"
+                style: "color: "+model.colors[message.user]+";"
             },m.trust( md.render(message.text) )),
         ])
     }
@@ -95,29 +95,30 @@ const Input = {
       },
       onkeypress: (e)=>{
         if(e.key === "Enter" && model.input !== ""){
-          controller.message(model.input)
+          controller.message(model.input, model.dungeon_key)
           model.input = ""
           m.redraw()
         }
       }
     })
+
   }
 }
 
 const Hello = {
-    view: () => {
-      return m(".wrap", [
-        m(".central", [
-          m(Chat),
-          m(Aside)
-        ]),
-        m(".bottom", [
-          m(Bag),
-          m(Input)
-        ])
+  view: () => {
+    return m(".wrap", [
+      m(".central", [
+        m(Chat),
+        m(Aside)
+      ]),
+      m(".bottom", [
+        m(Bag),
+        m(Input)
       ])
+    ])
 
-    }
+  }
 }
 
 m.mount(document.body, Hello)

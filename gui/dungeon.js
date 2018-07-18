@@ -1,20 +1,18 @@
 const fs = require('fs')
 const datn = require('dat-node')
-const controller = require('./controller')
 
-function dungeon (cb, model) {
-  controller.on('move', () => {
-    let key = model.dungeon_key.substring(6)
-    datn('./map/' + key, { key: key }, function (err, dat) {
-      if (err) throw err
-      dat.joinNetwork()
-
-      dat.archive.readFile('/dungeon/dungeon.md', 'UTF-8', function (err, file) {
+function load_dungeon (dungeon_key, callback) {
+    console.log(dungeon_key)
+      let key = dungeon_key
+      datn('./map/' + key, { key: key }, function (err, dat) {
         if (err) throw err
-        cb(file)
+        dat.joinNetwork()
+
+        dat.archive.readFile('/dungeon/dungeon.md', 'UTF-8', function (err, file) {
+          if (err) throw err
+          callback(file)
+        })
       })
-    })
-  })
 }
 
 function host(){
@@ -26,6 +24,6 @@ function host(){
 }
 
 module.exports = {
-    descr: dungeon,
-    host: host
+    load_dungeon: load_dungeon,
+    host: host,
 }
