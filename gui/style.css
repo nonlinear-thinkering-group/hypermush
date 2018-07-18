@@ -1,61 +1,23 @@
+*, *:before, *:after {
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box; 
+  box-sizing: border-box;
+}
+
 html, body {
-    font-family: "Hanken Grotesk", sans-serif;
-    margin: 0px;
-    padding: 0px;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+  font-family: "Hanken Grotesk", sans-serif;
+  margin: 0px;
+  padding: 0px;
 }
 
-.loading {
-    text-align: center;
-    margin-top: calc( 50vh - 70px );
-}
-
-.loading .title {
-    font-size: 72pt;
-}
-
-.wrap {
+body {
   display: flex;
-}
-
-main {
-  width: 60%;
-}
-
-aside {
-  width: 40%;
-  border-left: 1px solid black;
-  height: calc(100vh - 37px);
-}
-
-.bag {
-  display: flex;
-  align-items: baseline;
-}
-
-figure {
-  margin: 1rem;
-  padding: 0;
-}
-
-.bag-img {
-  text-align: center;
-}
-
-.bag-img img {
-  user-drag: none;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
+  flex-flow: column wrap;
+  min-height: 100vh;
 }
 
 img {
   width: 100%;
-  max-width: 120px;
 }
 
 p {
@@ -74,81 +36,144 @@ ul, ol {
   padding: 0 0 0 1rem;
 }
 
-.key {
-    text-align: right;
-    font-size: 8pt;
-    margin-right: 10px;
+figure {
+  margin: 1rem;
+  padding: 0;
 }
 
-.message {
-    margin-bottom: 10px;
+.loading {
+  text-align: center;
+  margin-top: calc( 50vh - 70px );
 }
 
-.messages {
-    margin: 10px;
-    height: calc(100% - 60px);
-    overflow-y: scroll;
+.loading .title {
+  font-size: 72pt;
 }
 
-.message-text {
-    display: block;
-    width: 300px;
-    vertical-align: top;
+.wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-.message-user, .message-date{
-    color: grey;
-    font-size: 10pt;
+.wrap > .central {
+  flex: 1;
 }
 
-.message-user {
-    margin-right: 30px;
+.central {
+  width: 100%;
+  display: flex;
 }
 
-.message-date {
-    margin-right: 10px;
+main {
+  width: 60%;
 }
 
-.online {
-    color: green;
+aside {
+  width: 40%;
+  border-left: 1px solid black;
 }
 
-.offline {
-    color: red;
+.bottom {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
 }
 
-.map {
-    width: 300px;
+.bag {
+  display: flex;
+  flex-flow: row;
+  align-items: baseline;
+  width: 100%;
+  background: red;
+  overflow-x: scroll;
 }
 
-.map-row {
-    height: 10px;
+.bag-img {
+  text-align: center;
+  flex: 1;
+  max-width: 6rem;
 }
 
-.map-box {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-}
-
-.map-box.here {
-    border: 1px solid red;
-    width: 8px;
-    height: 8px;
-}
-
-.dungeon0 {
-    background-color: black;
+.bag-img img {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 input {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    border: none;
-    box-shadow: inset 0 0 10px blue;
-    border-top: 1px solid black;
-    font-size: inherit;
+  width: 100%;
+  padding: 11px;
+  border: none;
+  box-shadow: inset 0 0 10px red;
+  font-size: inherit;
+}
+
+.key {
+  text-align: right;
+  font-size: 8pt;
+  margin-right: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+}
+
+.messages {
+  margin: 10px;
+  overflow-y: scroll;
+}
+
+.message-text {
+  display: block;
+  width: 300px;
+  vertical-align: top;
+}
+
+.message-user, .message-date{
+  color: grey;
+  font-size: 10pt;
+}
+
+.message-user {
+  margin-right: 30px;
+}
+
+.message-date {
+  margin-right: 10px;
+}
+
+.online {
+  color: green;
+}
+
+.offline {
+  color: red;
+}
+
+.map {
+  width: 300px;
+}
+
+.map-row {
+  height: 10px;
+}
+
+.map-box {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+
+.map-box.here {
+  border: 1px solid red;
+  width: 8px;
+  height: 8px;
+}
+
+.dungeon0 {
+  background-color: black;
 }
