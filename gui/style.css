@@ -146,5 +146,8 @@ input {
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
+    border: none;
+    box-shadow: inset 0 0 10px blue;
     border-top: 1px solid black;
+    font-size: inherit;
 }
