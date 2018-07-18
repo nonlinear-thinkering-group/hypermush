@@ -15,7 +15,6 @@ md.use(mila, {
 const Chat = {
   view: () => {
     return m("main", [
-      m(".key", "your key: "+model.my_key),
       m(".messages", {
         onupdate: (vnode)=>{
           vnode.dom.scrollTo(0,vnode.dom.scrollHeight);
@@ -113,6 +112,7 @@ const Hello = {
         m(Aside)
       ]),
       m(".bottom", [
+        m(".key", "your key: "+model.my_key),
         m(Bag),
         m(Input)
       ])
