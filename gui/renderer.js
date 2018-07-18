@@ -19,8 +19,7 @@ const Message = {
 
         return m(".message", [
             m("div.message-text", {
-                style: "color: "+model.colors[message.user]+";" //+
-                       //"margin-top: "+ distance + "px;"
+                style: "color: "+model.colors[message.user]+";"
             },m.trust( md.render(message.text) )),
         ])
     }

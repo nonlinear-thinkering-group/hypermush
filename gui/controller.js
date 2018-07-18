@@ -25,11 +25,13 @@ module.exports = {
         const cmd = message.split(" ")
         if(cmd[0]==="/host"){
             database.create(cmd[1])
+            ev.emit("login")
             return false
         }
 
         if(cmd[0]==="/join"){
             database.listen(cmd[1])
+            ev.emit("login")
             return false
         }
 

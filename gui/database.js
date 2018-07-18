@@ -90,6 +90,7 @@ function connect(db){
         db.watch('/map', function () {
             getMap()
         })
+
     })
 }
 

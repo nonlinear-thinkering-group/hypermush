@@ -2,6 +2,9 @@ const database = require('./database')
 const bag = require('./bag')
 const dungeon = require('./dungeon')
 const controller = require('./controller')
+const events = require('events');
+var ev = new events.EventEmitter();
+
 
 let model = {
     input: "", //value of input field
@@ -16,7 +19,7 @@ let model = {
     map: [],
     mapobj: {},
     position: [0,0],
-    dungeon_key: ""
+    dungeon_key: "",
 }
 
 //load data
@@ -24,9 +27,8 @@ database.getNames()
 database.getMessages()
 database.getTrades()
 bag.getItem((files) => { model.bag = files; m.redraw() })
-dungeon.host()
-dungeon.descr((file) => { model.dungeon = file; m.redraw() }, model)
 database.getMap()
+
 
 //sync events
 database.on('load-space', (key) => {
@@ -41,7 +43,7 @@ database.on('names', (names) => {
     m.redraw()
 })
 
-database.on('colors', (colors) => {
+database.on('colors', (colors) => {m.redraw()
     model.colors = _.object(colors)
     console.log(colors)
     m.redraw()
@@ -83,6 +85,10 @@ database.on('map', (mapobj) => {
 
     //update dungeon key
     model.dungeon_key = mapobj[model.position[0]][model.position[1]]
+    dungeon.load_dungeon(model.dungeon_key, (file)=>{
+        model.dungeon = file
+        m.redraw()
+    })
     m.redraw()
 })
 
@@ -97,6 +103,11 @@ controller.on('move', (dir)=> {
     if(model.map[newpos[0]+10] && model.map[newpos[0]+10][newpos[1]+10]){
         model.position = newpos
         model.dungeon_key = model.mapobj[model.position[0]][model.position[1]]
+
+        dungeon.load_dungeon(model.dungeon_key, (file)=>{
+            model.dungeon = file
+            m.redraw()
+        })
     }
 })
 
