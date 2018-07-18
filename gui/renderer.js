@@ -31,7 +31,7 @@ const Chat = {
         }
         return m(Message, {message: message, distance: distance})
       }))
-    ]) 
+    ])
   }
 }
 
@@ -79,7 +79,7 @@ const Map = {
             return m(".map-row", x.map((y, j) => {
                 return m(".map-box", {
                     class: "dungeon"+ (y?1:0) + " " + ((model.position[0]+10===i && model.position[1]+10===j)?"here": "")
-                }," ")
+                },".")
             }))
         }))
     }

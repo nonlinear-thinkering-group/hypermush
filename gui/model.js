@@ -83,13 +83,16 @@ database.on('map', (mapobj) => {
     })
 
     //update dungeon key
-    model.dungeon_key = mapobj[model.position[0]][model.position[1]]
-    dungeon.load_dungeon(model.dungeon_key, (file)=>{
-        model.dungeon = file
-        database.getMessages(model.dungeon_key)
-        controller.message("_enters the room_", model.dungeon_key)
-        m.redraw()
-    })
+    if(mapobj[model.position[0]] && mapobj[model.position[0]][model.position[1]]){
+        model.dungeon_key = mapobj[model.position[0]][model.position[1]]
+        dungeon.load_dungeon(model.dungeon_key, (file)=>{
+            model.dungeon = file
+            database.getMessages(model.dungeon_key)
+            controller.message("_enters the room_", model.dungeon_key)
+            m.redraw()
+        })
+    }
+
     m.redraw()
 })
 
