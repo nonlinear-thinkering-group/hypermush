@@ -35,8 +35,22 @@ aside {
   align-items: baseline;
 }
 
+figure {
+  margin: 1rem;
+  padding: 0;
+}
+
 .bag-img {
   text-align: center;
+}
+
+.bag-img img {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 img {
@@ -102,7 +116,6 @@ ul, ol {
     color: red;
 }
 
-
 .map {
     width: 300px;
 }
@@ -128,9 +141,10 @@ ul, ol {
 }
 
 input {
-    position: absolute;
-    bottom: 0px;
+    position: fixed;
+    bottom: 0;
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
+    border-top: 1px solid black;
 }
