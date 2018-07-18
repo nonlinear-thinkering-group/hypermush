@@ -9,7 +9,7 @@ function dungeon (cb, model) {
       if (err) throw err
       dat.joinNetwork()
 
-      dat.archive.readFile('/dungeon/dungeon.md', function (err, file) {
+      dat.archive.readFile('/dungeon/dungeon.md', 'UTF-8', function (err, file) {
         if (err) throw err
         cb(file)
       })
