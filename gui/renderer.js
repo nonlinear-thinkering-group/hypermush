@@ -62,8 +62,8 @@ const Aside = {
 
 const Bag = {
   view: () => {
-    return m(".bag", model.bag.map((item)=> {
-      return m("figure.bag-img", {onbeforeremove: function(vnode) {
+    return m(".bag", model.bag.map((item) => {
+      return m("figure.bag-img", { onbeforeremove: function(vnode) {
         vnode.dom.classList.add('fade')
         return new Promise (function(resolve) {
           setTimeout(resolve, 1000)
