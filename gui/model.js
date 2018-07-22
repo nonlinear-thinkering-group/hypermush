@@ -1,9 +1,7 @@
 const database = require('./database')
 const bag = require('./bag')
-const dungeon = require('./dungeon')
 const controller = require('./controller')
-const events = require('events');
-var ev = new events.EventEmitter();
+const ev = require('./events');
 
 
 let model = {
@@ -13,7 +11,7 @@ let model = {
     names: {}, // maps keys to usernames
     colors: {}, // maps keys to usernames
     online: [], // array of online users
-    trades: [],
+    dropped: [],
     bag: [],
     dungeon: "",
     map: [],
@@ -22,34 +20,27 @@ let model = {
     dungeon_key: "",
 }
 
-//load data
-database.getNames()
-database.getTrades()
-database.getMap()
-bag.getItem()
-
 //sync events
-database.on('load-space', (key) => {
+ev.on('dat/load-space', (key) => {
     console.log(key)
     model.my_key = key
     m.redraw()
 })
 
-bag.on('load_bag', files => {model.bag = files; m.redraw()})
+ev.on('bag/load', files => {model.bag = files; m.redraw()})
 
-database.on('names', (names) => {
+ev.on('dat/names', (names) => {
     model.names = _.object(names)
-    console.log(names)
     m.redraw()
 })
 
-database.on('colors', (colors) => {m.redraw()
+ev.on('dat/colors', (colors) => {m.redraw()
     model.colors = _.object(colors)
     console.log(colors)
     m.redraw()
 })
 
-database.on('messages', (messages) => {
+ev.on('dat/messages', (messages) => {
     model.messages = messages.sort((a,b)=>{
         return new Date(a.date) - new Date(b.date)
     })
@@ -57,7 +48,7 @@ database.on('messages', (messages) => {
     m.redraw()
 })
 
-database.on('map', (mapobj) => {
+ev.on('dat/map', (mapobj) => {
     model.mapobj = mapobj
     let pos = [0,0]
     let size = 10
@@ -86,36 +77,38 @@ database.on('map', (mapobj) => {
     //update dungeon key
     if(mapobj[model.position[0]] && mapobj[model.position[0]][model.position[1]]){
         model.dungeon_key = mapobj[model.position[0]][model.position[1]]
-        dungeon.load_dungeon(model.dungeon_key, (file)=>{
-            model.dungeon = file
-            database.getMessages(model.dungeon_key)
-            controller.message("_enters the room_", model.dungeon_key)
-            m.redraw()
-        })
+        ev.emit("model/moved")
     }
 
     m.redraw()
 })
 
-database.on('trades', (trades) => {
-    model.trades = trades
-    console.log(trades)
+ev.on('dungeon/loaded', (file)=>{
+    model.dungeon = file
     m.redraw()
 })
 
-controller.on('move', (dir)=> {
+ev.on('dat/dropped', (dropped) => {
+    model.dropped = dropped
+    console.log(dropped)
+    m.redraw()
+})
+
+ev.on('controller/move', (dir)=> {
     let newpos = [model.position[0]+dir[0], model.position[1]+dir[1]]
     if(model.map[newpos[0]+10] && model.map[newpos[0]+10][newpos[1]+10]){
-        controller.message("_leaves the room_", model.dungeon_key)
+        ev.emit("model/beforemoved")
+
         model.position = newpos
         model.dungeon_key = model.mapobj[model.position[0]][model.position[1]]
-
-        dungeon.load_dungeon(model.dungeon_key, (file)=>{
-            model.dungeon = file
-            database.getMessages(model.dungeon_key)
-            controller.message("_enters the room_", model.dungeon_key)
-            m.redraw()
-        })
+        ev.emit("model/moved")
+        //dungeon.load_dungeon(model.dungeon_key, (file)=>{
+        //    model.dungeon = file
+        //    database.getMessages(model.dungeon_key)
+        //    database.getDropped(model.dungeon_key)
+        //    controller.message("_enters the room_", model.dungeon_key)
+        //    m.redraw()
+        //})
     }
 })
 
