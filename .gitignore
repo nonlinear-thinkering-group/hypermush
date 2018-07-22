@@ -2,5 +2,6 @@ node_modules
 dat
 .dat
 dat.json
-files/bag
+bag
+drop
 map
