@@ -1,17 +1,12 @@
 const fs = require('fs')
 const hyperdb = require('hyperdb')
 const discovery = require('hyperdiscovery')
-
-//var discovery = require('discovery-swarm')
-//var swarmDefaults = require('dat-swarm-defaults')
-
-const events = require('events');
-const crypt = require("cryptiles")
-
-var ev = new events.EventEmitter();
+const ev = require('./events')
+const crypt = require("cryptiles");
 
 var db, swarm
 var key, lkey
+var messagewatcher, dropwatcher
 
 function create(name) {
     db = hyperdb('./dat/'+name, {valueEncoding: 'utf-8'})
@@ -20,16 +15,19 @@ function create(name) {
     })
     connect(db)
 }
+ev.on("controller/host", create)
 
 function listen(key) {
     db = hyperdb('./dat/'+key, key, {valueEncoding: 'utf-8'})
     connect(db)
 }
+ev.on("controller/join", listen)
 
 function connect(db){
     db.on('ready', ()=>{
         key = db.key.toString('hex')
         lkey = db.local.key.toString('hex')
+        ev.emit('dat/load-space', lkey)
 
         //pass values for auto authorize
         swarm = discovery(db, {
@@ -44,61 +42,48 @@ function connect(db){
         })
 
         swarm.on('connection', (peer, type)=>{
-            console.log("new connection: "+peer.key.toString('hex'))
-            peer.on('close', ()=>{
-                console.log("closed connection: "+peer.key.toString('hex'))
-            })
-
-
-
-            //auto authorize
-            if (peer.remoteUserData !== undefined){
-                let data
-                try { data = JSON.parse(peer.remoteUserData) } catch (err) { return console.log(err)}
-                let key = Buffer.from(data.key)
-                let username = data.username
-                db.authorized(key, function (err, auth) {
-                    if (err) return console.log(err)
-                    if (!auth) {
-                        db.authorize(key, function (err) {
-                            if (err) return console.log(err)
-                        })
-                    }
-              })
-            }
-
+            //console.log("new connection: "+peer.key.toString('hex'))
+            //peer.on('close', ()=>{
+            //    console.log("closed connection: "+peer.key.toString('hex'))
+            //})
+            authorize(peer)
         })
 
         //register dungeon
         registerDungeon()
 
-        //broadcast everything
-        getKey()
-        getNames()
-        getMessages()
+        //broadcast the map
         getMap()
-
-        //watch changes
-        db.watch('/names', function () {
-            getNames()
-        })
-
-        db.watch('/messages', function () {
-            getMessages(model.dungeon_key)
-        })
-
         db.watch('/map', function () {
             getMap()
+        })
+
+        getNames()
+        db.watch('/names', function () {
+            getNames()
         })
 
     })
 }
 
-function getKey(){
-    if(db){
-        ev.emit('load-space', lkey)
+function authorize(peer){
+    //auto authorize
+    if (peer.remoteUserData !== undefined){
+        let data
+        try { data = JSON.parse(peer.remoteUserData) } catch (err) { return console.log(err)}
+        let key = Buffer.from(data.key)
+        let username = data.username
+        db.authorized(key, function (err, auth) {
+            if (err) return console.log(err)
+            if (!auth) {
+                db.authorize(key, function (err) {
+                    if (err) return console.log(err)
+                })
+            }
+      })
     }
 }
+
 
 function getNames(){
     if(db){
@@ -108,7 +93,7 @@ function getNames(){
                     node[0].key.split("/")[1], node[0].value
                 ]
             })
-            ev.emit('names', names)
+            ev.emit('dat/names', names)
         })
     }
 }
@@ -119,26 +104,8 @@ function setName(name){
         getNames()
     })
 }
+ev.on("controller/name", setName)
 
-function getColors(){
-    if(db){
-        db.list('/colors/', (err, l)=>{
-            var names = l.map((node)=>{
-                return [
-                    node[0].key.split("/")[1], node[0].value
-                ]
-            })
-            ev.emit('colors', names)
-        })
-    }
-}
-
-function setColor(name){
-    db.put('/colors/'+lkey, name, (err)=>{
-        if (err) throw err
-        getColors()
-    })
-}
 
 function setAuth(key){
     console.log(key)
@@ -147,41 +114,79 @@ function setAuth(key){
     })
 }
 
-function getMessages(room){
-    if(room && db){
-        db.list('/messages/'+room+'/', (err, l)=>{
-            var messages = l.map((node)=>{
-                return JSON.parse(node[0].value)
-            })
-            ev.emit('messages', messages)
+function watchMessages(){
+    console.log(model.dungeon_key)
+    if(model.dungeon_key && db){
+        let path = '/messages/'+model.dungeon_key+'/'
+        getMessages(path)
+        if(messagewatcher) {messagewatcher.destroy()}
+        messagewatcher = db.watch(path, ()=>{
+            getMessages(path)
         })
     }
 }
 
-function message(message, room){
-    console.log(room)
-    var k = crypt.randomString(64)
-    db.put('/messages/'+room+'/'+k, JSON.stringify(message), (err)=>{
-        if (err) throw err
-        getMessages()
+
+function getMessages(path){
+    db.list(path, (err, l)=>{
+        var messages = l.map((node)=>{
+            return JSON.parse(node[0].value)
+        })
+        ev.emit('dat/messages', messages)
     })
 }
 
-function drop(drop, room) {
+function message(message){
+    let path = '/messages/'+model.dungeon_key+'/'
     var k = crypt.randomString(64)
-    db.put('/drop/'+room+'/'+k, drop, (err) => {
+    db.put(path+k, JSON.stringify(message), (err)=>{
         if (err) throw err
-        getTrades()
+        getMessages(path)
     })
 }
+ev.on("controller/message", message)
 
-function getTrades(){
+function drop(file) {
+    let path = '/drop/'+model.dungeon_key+'/'
+    var k = crypt.randomString(64)
+    db.put(path+'/'+k, JSON.stringify({
+        file: file,
+        key: model.my_key
+    }), (err) => {
+        if (err) throw err
+    })
+}
+ev.on("bag/dropped", drop)
+
+function pick(file) {
+    let path = '/drop/'+model.dungeon_key+'/'
+    var k = crypt.randomString(64)
+    db.del(path+'/'+k, (err) => {
+        if (err) throw err
+    })
+}
+ev.on("bag/picked", pick)
+
+
+function watchDropped(){
+    console.log(model.dungeon_key)
+    if(model.dungeon_key && db){
+        let path = '/drop/'+model.dungeon_key+'/'
+        getDropped(path)
+        if(messagewatcher) {messagewatcher.destroy()}
+        messagewatcher = db.watch(path, ()=>{
+            getDropped(path)
+        })
+    }
+}
+
+function getDropped(path){
   if(db){
-    db.list('/trades/', (err, l)=>{
-      var trades = l.map((node)=>{
-        return node[0].value
+    db.list(path, (err, l)=>{
+      var dropped = l.map((node)=>{
+        return JSON.parse(node[0].value)
       })
-      ev.emit('trades', trades)
+      ev.emit('dat/dropped', dropped)
     })
   }
 }
@@ -197,7 +202,7 @@ function getMap(){
                 if(map[x] === undefined) map[x] = {}
                 map[x][y] = node[0].value
             })
-            ev.emit('map', map)
+            ev.emit('dat/map', map)
         })
     }
 }
@@ -239,7 +244,6 @@ function registerDungeon(){
                         if(map[ix+1] === undefined || map[ix+1][iy] === undefined){ emptyspots.push([ix+1,iy]) }
                         if(map[ix] === undefined || map[ix][iy+1] === undefined){ emptyspots.push([ix,iy+1]) }
                         if(map[ix] === undefined || map[ix][iy-1] === undefined){ emptyspots.push([ix,iy-1]) }
-
                     })
                 })
                 let pick = Math.floor(Math.random()*emptyspots.length)
@@ -254,27 +258,9 @@ function registerDungeon(){
         }
 
     })
-
 }
 
-function on(tag, callback){
-    ev.on(tag, callback)
-}
-
-module.exports = {
-    create: create,
-    listen: listen,
-    getKey: getKey,
-    getNames: getNames,
-    setName: setName,
-    getColors: getColors,
-    setColor: setColor,
-    setAuth: setAuth,
-    drop: drop,
-    getTrades: getTrades,
-    getMessages: getMessages,
-    message: message,
-    getMap: getMap,
-    registerDungeon: registerDungeon,
-    on: on
-}
+ev.on("model/moved", ()=>{
+    watchMessages()
+    watchDropped()
+})

@@ -127,3 +127,6 @@ const Hello = {
 }
 
 m.mount(document.body, Hello)
+
+const ev = require("./events")
+ev.emit("load")
