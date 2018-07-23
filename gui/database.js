@@ -42,10 +42,10 @@ function connect(db){
         })
 
         swarm.on('connection', (peer, type)=>{
-            //console.log("new connection: "+peer.key.toString('hex'))
-            //peer.on('close', ()=>{
-            //    console.log("closed connection: "+peer.key.toString('hex'))
-            //})
+            console.log("new connection: "+peer.key.toString('hex'))
+            peer.on('close', ()=>{
+                console.log("closed connection: "+peer.key.toString('hex'))
+            })
             authorize(peer)
         })
 
@@ -62,7 +62,6 @@ function connect(db){
         db.watch('/names', function () {
             getNames()
         })
-
     })
 }
 
@@ -71,16 +70,18 @@ function authorize(peer){
     if (peer.remoteUserData !== undefined){
         let data
         try { data = JSON.parse(peer.remoteUserData) } catch (err) { return console.log(err)}
-        let key = Buffer.from(data.key)
-        let username = data.username
-        db.authorized(key, function (err, auth) {
-            if (err) return console.log(err)
-            if (!auth) {
-                db.authorize(key, function (err) {
-                    if (err) return console.log(err)
-                })
-            }
-      })
+        if(data){
+            let key = Buffer.from(data.key)
+            let username = data.username
+            db.authorized(key, function (err, auth) {
+                if (err) return console.log(err)
+                if (!auth) {
+                    db.authorize(key, function (err) {
+                        if (err) return console.log(err)
+                    })
+                }
+            })
+        }
     }
 }
 
@@ -151,7 +152,7 @@ function drop(file) {
     var k = crypt.randomString(64)
     db.put(path+'/'+k, JSON.stringify({
         file: file,
-        key: model.my_key
+        key: model.dungeon_key
     }), (err) => {
         if (err) throw err
     })
