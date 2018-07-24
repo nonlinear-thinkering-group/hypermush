@@ -39,12 +39,26 @@ function pick (filename) {
             console.log(dat)
 
             dat.archive.on('sync', function () {
-                fs.rename('./map/' + found.key + '/drop/' + filename, './files/bag/' + filename, (err) => {
-                    if (err) throw err
-                    console.log("sync")
-                    ev.emit("bag/picked", filename)
-                    getItems ()
-                })
+
+                var rd = fs.createReadStream('./map/' + found.key + '/drop/' + filename);
+                  rd.on("error", function(err) {
+                    done(err);
+                  });
+                  var wr = fs.createWriteStream('./files/bag/' + filename);
+                  wr.on("error", function(err) {
+                    done(err);
+                  });
+                  wr.on("close", function(ex) {
+                    done();
+                  });
+                  rd.pipe(wr);
+
+                  function done(err) {
+                      if (err) throw err
+                      console.log("sync")
+                      ev.emit("bag/picked", filename)
+                      getItems ()
+                  }
             })
 
             dat.joinNetwork()

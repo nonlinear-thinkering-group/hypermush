@@ -1,4 +1,4 @@
-const fs = require('fs')
+    const fs = require('fs')
 const hyperdb = require('hyperdb')
 const discovery = require('hyperdiscovery')
 const ev = require('./events')
@@ -6,7 +6,7 @@ const crypt = require("cryptiles");
 
 var db, swarm
 var key, lkey
-var messagewatcher, dropwatcher
+var messagewatcher, droppedwatcher
 
 function create(name) {
     db = hyperdb('./dat/'+name, {valueEncoding: 'utf-8'})
@@ -116,9 +116,8 @@ function setAuth(key){
 }
 
 function watchMessages(){
-    console.log(model.dungeon_key)
     if(model.dungeon_key && db){
-        let path = '/messages/'+model.dungeon_key+'/'
+        let path = '/messages/'+model.dungeon_key
         getMessages(path)
         if(messagewatcher) {messagewatcher.destroy()}
         messagewatcher = db.watch(path, ()=>{
@@ -129,6 +128,7 @@ function watchMessages(){
 
 
 function getMessages(path){
+    console.log('change')
     db.list(path, (err, l)=>{
         var messages = l.map((node)=>{
             return JSON.parse(node[0].value)
@@ -138,11 +138,10 @@ function getMessages(path){
 }
 
 function message(message){
-    let path = '/messages/'+model.dungeon_key+'/'
+    let path = '/messages/'+model.dungeon_key
     var k = crypt.randomString(64)
-    db.put(path+k, JSON.stringify(message), (err)=>{
+    db.put(path+'/'+k, JSON.stringify(message), (err)=>{
         if (err) throw err
-        getMessages(path)
     })
 }
 ev.on("controller/message", message)
@@ -174,8 +173,8 @@ function watchDropped(){
     if(model.dungeon_key && db){
         let path = '/drop/'+model.dungeon_key+'/'
         getDropped(path)
-        if(messagewatcher) {messagewatcher.destroy()}
-        messagewatcher = db.watch(path, ()=>{
+        if(droppedwatcher) {droppedwatcher.destroy()}
+        droppedwatcher = db.watch(path, ()=>{
             getDropped(path)
         })
     }
