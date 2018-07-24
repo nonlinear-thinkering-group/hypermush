@@ -73,14 +73,16 @@ main {
 
 aside {
   width: 40%;
+  overflow-y: scroll;
   border-left: 1px solid black;
 }
 
 .bottom {
   width: 100%;
-  background: red;
   padding: 0.25rem;
   display: flex;
+  background: #fff;
+  border-top: 1px solid black;
   flex-flow: column;
 }
 
