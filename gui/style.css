@@ -22,8 +22,9 @@ img {
   max-width: 100%;
 }
 
+h1, h2, h3, h4, h5, h6,
 p {
-  margin: 1rem 0;
+  margin: 0 0 1rem 0;
 }
 
 blockquote {
@@ -77,13 +78,41 @@ aside {
   border-left: 1px solid black;
 }
 
-.bottom {
-  width: 100%;
-  padding: 0.25rem;
+.bottom-top {
   display: flex;
-  background: #fff;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.bottom {
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  -webkit-animation: pulse_bg 18s infinite alternate;
+  transition: pulse_bg 18s infinite alternate;
+  background: #67FFA9;
   border-top: 1px solid black;
   flex-flow: column;
+}
+
+@-webkit-keyframes pulse_bg {
+  0% {background: #DFD5FD;}
+  25% {background: #03C98F;}
+  40% {background: #87FF78;}
+  55% {background: #FA523E;}
+  70% {background: #FA523E;}
+  85% {background: #FEAC4C;}
+  100% {background: #FFF549;}
+}
+
+@keyframes pulse_bg {
+  0% {background: #DFD5FD;}
+  25% {background: #03C98F;}
+  40% {background: #87FF78;}
+  55% {background: #FA523E;}
+  70% {background: #FA523E;}
+  85% {background: #FEAC4C;}
+  100% {background: #FFF549;}
 }
 
 .bag {
@@ -91,13 +120,33 @@ aside {
   flex-flow: row;
   align-items: flex-end;
   overflow-x: scroll;
+  padding: 0.25rem;
+}
+
+button {
+  color: inherit;
+  background-color: #fff;
+  padding: 0.25rem;
+  border-width: 0;
+  border-style: none;
+  border-color: inherit;
+  border-image: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+.toggle {
+  padding: 0 0.5rem;
 }
 
 .bag-img {
   text-align: center;
   border: 1px dashed black;
-  margin: 1rem;
-  padding: 0.5rem;
+  margin: 1rem 0.25rem;
+  padding: 0.25rem;
+  background: #fff;
 }
 
 .bag-img:first-child {
@@ -118,6 +167,10 @@ aside {
   max-width: 4.5rem;
 }
 
+.bag-img figcaption {
+  font-size: 0.8rem;
+}
+
 input {
   width: 100%;
   padding: 11px;
@@ -131,6 +184,7 @@ input:focus {
 }
 
 .key {
+  padding: 0.25rem;
   font-size: 0.8rem;
 }
 
@@ -139,25 +193,27 @@ input:focus {
 }
 
 .messages {
-  margin: 10px;
+  padding: 0.5rem 0.25rem;
   overflow-y: scroll;
   height: 100%;
 }
 
 .message-text {
   display: block;
-  width: 300px;
-  vertical-align: top;
+}
+
+.message:last-child p {
+  margin: 0;
 }
 
 .message-user,
 .message-date {
   color: grey;
-  font-size: 10pt;
+  font-size: 0.8rem;
 }
 
 .message-user {
-  margin-right: 30px;
+  /* margin-right: 30px; */
 }
 
 .message-date {

@@ -117,7 +117,10 @@ const Hello = {
         m(Aside)
       ]),
       m(".bottom", [
-        m(".key", "your key: "+model.my_key),
+        m(".bottom-top", [
+          m(".key", "your key: "+model.my_key),
+          m("button.toggle", "▼"),
+        ]),
         m(Bag),
         m(Input)
       ])
