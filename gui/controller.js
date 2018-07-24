@@ -34,7 +34,6 @@ let controller = {
             return false
         }
 
-
         if(cmd[0]==="/drop"){
             ev.emit("controller/drop", cmd[1])
             return false
@@ -66,6 +65,7 @@ ev.on("model/beforemoved", (filename) => controller.message('*leaves the room*')
 ev.on("model/moved", (filename) => controller.message('*enters the room*'))
 ev.on("bag/dropped", (filename) => controller.message('*dropped ' + filename + '*', model.dungeon_key))
 ev.on("bag/picked", (filename) => controller.message('*picked up ' + filename + '*', model.dungeon_key))
+ev.on("bag/notfound", (filename) => controller.message('*tried to pick up ' + filename + " but it was'nt there*", model.dungeon_key))
 
 
 module.exports = controller

@@ -72,6 +72,8 @@ function pick (filename) {
             //}
 
         })
+    } else {
+        ev.emit("bag/notfound", filename)
     }
 }
 ev.on("controller/pick", pick)

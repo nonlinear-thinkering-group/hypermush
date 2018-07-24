@@ -147,9 +147,8 @@ function message(message){
 ev.on("controller/message", message)
 
 function drop(file) {
-    let path = '/drop/'+model.dungeon_key+'/'
-    var k = crypt.randomString(64)
-    db.put(path+'/'+k, JSON.stringify({
+    let path = '/drop/'+model.dungeon_key
+    db.put(path+'/'+file, JSON.stringify({
         file: file,
         key: model.dungeon_key
     }), (err) => {
@@ -159,9 +158,9 @@ function drop(file) {
 ev.on("bag/dropped", drop)
 
 function pick(file) {
-    let path = '/drop/'+model.dungeon_key+'/'
-    var k = crypt.randomString(64)
-    db.del(path+'/'+k, (err) => {
+    console.log("picked")
+    let path = '/drop/'+model.dungeon_key
+    db.del(path+'/'+file, (err) => {
         if (err) throw err
     })
 }
