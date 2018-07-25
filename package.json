@@ -10,6 +10,7 @@
     "electron": "^2.0.0"
   },
   "dependencies": {
+    "chokidar": "^2.0.4",
     "cryptiles": "^4.1.1",
     "dat-node": "^3.5.11",
     "hyperdb": "^3.0.0-4",

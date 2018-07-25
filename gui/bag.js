@@ -1,4 +1,5 @@
 const fs = require('fs')
+const chokidar = require('chokidar')
 const ev = require('./events')
 const database = require('./database')
 const datn = require('dat-node')
@@ -10,6 +11,11 @@ function getItems () {
   })
 }
 ev.on("load", getItems)
+
+let watcher = chokidar.watch('./files/bag');
+
+watcher.on('all', getItems)
+
 
 function drop (filename) {
   //TODO: fix this shitty code for the love of god
@@ -39,26 +45,38 @@ function pick (filename) {
             console.log(dat)
 
             dat.archive.on('sync', function () {
+                fs.stat('./map/' + found.key + '/drop/' + filename, function(err) {
+                    if(err) {
+                        console.log("file does not exist")
+                        setTimeout(function(){
+                            pick(filename)
+                        },500)
+                        return
+                    }
 
-                var rd = fs.createReadStream('./map/' + found.key + '/drop/' + filename);
-                  rd.on("error", function(err) {
-                    done(err);
-                  });
-                  var wr = fs.createWriteStream('./files/bag/' + filename);
-                  wr.on("error", function(err) {
-                    done(err);
-                  });
-                  wr.on("close", function(ex) {
-                    done();
-                  });
-                  rd.pipe(wr);
+                    var rd = fs.createReadStream('./map/' + found.key + '/drop/' + filename);
+                      rd.on("error", function(err) {
+                        done(err);
+                      });
 
-                  function done(err) {
-                      if (err) throw err
-                      console.log("sync")
-                      ev.emit("bag/picked", filename)
-                      getItems ()
-                  }
+                      var wr = fs.createWriteStream('./files/bag/' + filename);
+                      wr.on("error", function(err) {
+                        done(err);
+                      });
+
+                      wr.on("close", function(ex) {
+                        done();
+                      });
+
+                      rd.pipe(wr);
+
+                      function done(err) {
+                          if (err) throw err
+                          console.log("sync")
+                          ev.emit("bag/picked", filename)
+                          getItems ()
+                      }
+                  })
             })
 
             dat.joinNetwork()
