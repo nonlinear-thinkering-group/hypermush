@@ -14,8 +14,7 @@ md.use(mila, {
 
 const Chat = {
   view: () => {
-    return m("main", [
-      m(".messages", {
+      return m("main", {
         onupdate: (vnode)=>{
           vnode.dom.scrollTo(0,vnode.dom.scrollHeight);
         }
@@ -31,7 +30,6 @@ const Chat = {
         }
         return m(Message, {message: message, distance: distance})
       }))
-    ])
   }
 }
 
@@ -56,42 +54,8 @@ const Aside = {
         m(".peopleinroom",model.peopleinroom.map((person)=>{
             return m(".person", model.names[person])
         }))
-      // dungeon
-      //m(".dungeon", m.trust( md.render(model.dungeon) )),
-      // map
-      //m(Map)
     ])
   }
-}
-
-const Bag = {
-  view: () => {
-    return m(".bag", model.bag.map((item) => {
-      return m("figure.bag-img", { onbeforeremove: function(vnode) {
-        vnode.dom.classList.add('fade')
-        return new Promise (function(resolve) {
-          setTimeout(resolve, 1000)
-        })
-      }}, [
-          m("img", {
-            src: '../files/bag/' + item
-          }),
-          m("figcaption", item)
-        ])
-      }))
-  }
-}
-
-const Map = {
-    view: () => {
-        return m(".map", model.map.map((x, i) => {
-            return m(".map-row", x.map((y, j) => {
-                return m(".map-box", {
-                    class: "dungeon"+ (y?1:0) + " " + ((model.position[0]+10===i && model.position[1]+10===j)?"here": "")
-                },".")
-            }))
-        }))
-    }
 }
 
 const Input = {
@@ -121,11 +85,6 @@ const Hello = {
         m(Aside)
       ]),
       m(".bottom", [
-        m(".bottom-top", [
-          m(".key", "your key: "+model.my_key),
-          m("button.toggle", "▼"),
-        ]),
-        //m(Bag),
         m(Input)
       ])
     ])
