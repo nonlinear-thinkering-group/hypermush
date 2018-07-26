@@ -49,7 +49,7 @@ ev.on('dat/messages', (messages) => {
             return (new Date(a.date) >= model.enterdate)
         })
         .sort((a,b)=>{
-            return b.order - a.order
+            return a.order - b.order
         })
     console.log(messages)
     m.redraw()

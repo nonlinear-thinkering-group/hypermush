@@ -12,7 +12,7 @@ let controller = {
             //get last message
             let order = 0
             let last = model.messages[model.messages.length-1]
-            if(last) order = last.order
+            if(last) order = last.order+1
 
 
             const me = {
