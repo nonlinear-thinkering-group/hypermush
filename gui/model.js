@@ -16,8 +16,9 @@ let model = {
     map: [],
     mapobj: {},
     position: [0,0],
-    room: "tavern",
-    enterdate: new Date()
+    room: "",
+    enterdate: new Date(),
+    peopleinroom: []
 }
 
 //sync events
@@ -51,6 +52,16 @@ ev.on('dat/messages', (messages) => {
             return new Date(a.date) - new Date(b.date)
         })
     console.log(messages)
+    m.redraw()
+})
+
+ev.on('dat/locations', (locations) => {
+    model.locations = locations
+    model.peopleinroom = model.locations.filter((a)=>{
+        return a[1]===model.room
+    }).map((a)=>{
+        return model.names[a[0]]
+    })
     m.redraw()
 })
 

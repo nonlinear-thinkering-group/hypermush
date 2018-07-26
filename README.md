@@ -8,22 +8,10 @@ npm install && npm start
 
 ## commands
 
-host a new conversation using
-
-```
-/host conversationname
-```
-
 connect to a host using
 
 ```
 /join key
-```
-
-authorize somebody to join using
-
-```
-/auth key
 ```
 
 set your name using
@@ -31,6 +19,25 @@ set your name using
 ```
 /name yourname
 ```
+
+go to a room using
+
+```
+/goto roomname
+```
+
+you can describe what you're doing using
+
+```
+*eats a banana*
+```
+
+host a new session using
+
+```
+/host conversationname
+```
+
 
 ## config
 

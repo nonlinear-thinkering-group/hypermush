@@ -62,6 +62,11 @@ function connect(db){
         db.watch('/names', function () {
             getNames()
         })
+
+        getLocations()
+        db.watch('/locations', function () {
+            getLocations()
+        })
     })
 }
 
@@ -102,10 +107,31 @@ function getNames(){
 function setName(name){
     db.put('/names/'+lkey, name, (err)=>{
         if (err) throw err
-        getNames()
+        //getNames()
     })
 }
 ev.on("controller/name", setName)
+
+function getLocations(){
+    if(db){
+        db.list('/locations/', (err, l)=>{
+            var names = l.map((node)=>{
+                return [
+                    node[0].key.split("/")[1], node[0].value
+                ]
+            })
+            ev.emit('dat/locations', names)
+        })
+    }
+}
+
+function setLocation(){
+    db.put('/locations/'+lkey, model.room, (err)=>{
+        if (err) throw err
+        getLocations()
+    })
+}
+ev.on("model/moved", setLocation)
 
 
 function setAuth(key){
@@ -146,11 +172,10 @@ function message(message){
 }
 ev.on("controller/message", message)
 
-function drop(file) {
+function drop(object) {
     let path = '/drop/'+model.room
-    db.put(path+'/'+file, JSON.stringify({
-        file: file,
-        key: model.room
+    db.put(path+'/'+object, JSON.stringify({
+        object: object
     }), (err) => {
         if (err) throw err
     })
