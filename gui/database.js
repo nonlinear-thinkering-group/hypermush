@@ -50,13 +50,13 @@ function connect(db){
         })
 
         //register dungeon
-        registerDungeon()
+        //registerDungeon()
 
         //broadcast the map
-        getMap()
-        db.watch('/map', function () {
-            getMap()
-        })
+        //getMap()
+        //db.watch('/map', function () {
+        //    getMap()
+        //})
 
         getNames()
         db.watch('/names', function () {
@@ -116,8 +116,8 @@ function setAuth(key){
 }
 
 function watchMessages(){
-    if(model.dungeon_key && db){
-        let path = '/messages/'+model.dungeon_key
+    if(model.room && db){
+        let path = '/messages/'+model.room
         getMessages(path)
         if(messagewatcher) {messagewatcher.destroy()}
         messagewatcher = db.watch(path, ()=>{
@@ -138,7 +138,7 @@ function getMessages(path){
 }
 
 function message(message){
-    let path = '/messages/'+model.dungeon_key
+    let path = '/messages/'+model.room
     var k = crypt.randomString(64)
     db.put(path+'/'+k, JSON.stringify(message), (err)=>{
         if (err) throw err
@@ -147,10 +147,10 @@ function message(message){
 ev.on("controller/message", message)
 
 function drop(file) {
-    let path = '/drop/'+model.dungeon_key
+    let path = '/drop/'+model.room
     db.put(path+'/'+file, JSON.stringify({
         file: file,
-        key: model.dungeon_key
+        key: model.room
     }), (err) => {
         if (err) throw err
     })
@@ -159,7 +159,7 @@ ev.on("bag/dropped", drop)
 
 function pick(file) {
     console.log("picked")
-    let path = '/drop/'+model.dungeon_key
+    let path = '/drop/'+model.room
     db.del(path+'/'+file, (err) => {
         if (err) throw err
     })
@@ -168,9 +168,9 @@ ev.on("bag/picked", pick)
 
 
 function watchDropped(){
-    console.log(model.dungeon_key)
-    if(model.dungeon_key && db){
-        let path = '/drop/'+model.dungeon_key+'/'
+    console.log(model.room)
+    if(model.room && db){
+        let path = '/drop/'+model.room+'/'
         getDropped(path)
         if(droppedwatcher) {droppedwatcher.destroy()}
         droppedwatcher = db.watch(path, ()=>{

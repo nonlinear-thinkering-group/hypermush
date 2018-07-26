@@ -18,7 +18,7 @@ let controller = {
 
     },
     command: (message, key)=>{
-        const cmd = message.split(" ")
+        const cmd = message.split(/ (.+)/)
         if(cmd[0]==="/host"){
             ev.emit("controller/host", cmd[1])
             return false
@@ -43,20 +43,8 @@ let controller = {
             ev.emit("controller/pick", cmd[1])
         }
 
-        if(cmd[0]==="/n"){
-            ev.emit("controller/move", [-1,0])
-        }
-
-        if(cmd[0]==="/e"){
-            ev.emit("controller/move", [0,1])
-        }
-
-        if(cmd[0]==="/s"){
-            ev.emit("controller/move", [1,0])
-        }
-
-        if(cmd[0]==="/w"){
-            ev.emit("controller/move", [0,-1])
+        if(cmd[0]==="/goto"){
+            ev.emit("controller/move", cmd[1])
         }
     }
 }

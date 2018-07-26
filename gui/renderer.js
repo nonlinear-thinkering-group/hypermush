@@ -114,14 +114,14 @@ const Hello = {
     return m(".wrap", [
       m(".central", [
         m(Chat),
-        m(Aside)
+        //m(Aside)
       ]),
       m(".bottom", [
         m(".bottom-top", [
           m(".key", "your key: "+model.my_key),
           m("button.toggle", "▼"),
         ]),
-        m(Bag),
+        //m(Bag),
         m(Input)
       ])
     ])
