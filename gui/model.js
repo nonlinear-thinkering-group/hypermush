@@ -49,7 +49,7 @@ ev.on('dat/messages', (messages) => {
             return (new Date(a.date) >= model.enterdate)
         })
         .sort((a,b)=>{
-            return new Date(a.date) - new Date(b.date)
+            return b.order - a.order
         })
     console.log(messages)
     m.redraw()
@@ -60,7 +60,7 @@ ev.on('dat/locations', (locations) => {
     model.peopleinroom = model.locations.filter((a)=>{
         return a[1]===model.room
     }).map((a)=>{
-        return model.names[a[0]]
+        return a[0]
     })
     m.redraw()
 })
