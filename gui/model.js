@@ -1,5 +1,4 @@
 const database = require('./database')
-const bag = require('./bag')
 const controller = require('./controller')
 const ev = require('./events');
 
@@ -17,13 +16,17 @@ let model = {
     map: [],
     mapobj: {},
     position: [0,0],
-    dungeon_key: "",
+    room: "",
+    enterdate: new Date(),
+    peopleinroom: []
 }
 
 //sync events
 ev.on('dat/load-space', (key) => {
     console.log(key)
     model.my_key = key
+    model.room = "tavern"
+    ev.emit("model/moved")
     m.redraw()
 })
 
@@ -41,10 +44,24 @@ ev.on('dat/colors', (colors) => {m.redraw()
 })
 
 ev.on('dat/messages', (messages) => {
-    model.messages = messages.sort((a,b)=>{
-        return new Date(a.date) - new Date(b.date)
-    })
+    model.messages = messages
+        .filter((a)=>{
+            return (new Date(a.date) >= model.enterdate)
+        })
+        .sort((a,b)=>{
+            return new Date(a.date) - new Date(b.date)
+        })
     console.log(messages)
+    m.redraw()
+})
+
+ev.on('dat/locations', (locations) => {
+    model.locations = locations
+    model.peopleinroom = model.locations.filter((a)=>{
+        return a[1]===model.room
+    }).map((a)=>{
+        return model.names[a[0]]
+    })
     m.redraw()
 })
 
@@ -94,22 +111,12 @@ ev.on('dat/dropped', (dropped) => {
     m.redraw()
 })
 
-ev.on('controller/move', (dir)=> {
-    let newpos = [model.position[0]+dir[0], model.position[1]+dir[1]]
-    if(model.map[newpos[0]+10] && model.map[newpos[0]+10][newpos[1]+10]){
-        ev.emit("model/beforemoved")
-
-        model.position = newpos
-        model.dungeon_key = model.mapobj[model.position[0]][model.position[1]]
-        ev.emit("model/moved")
-        //dungeon.load_dungeon(model.dungeon_key, (file)=>{
-        //    model.dungeon = file
-        //    database.getMessages(model.dungeon_key)
-        //    database.getDropped(model.dungeon_key)
-        //    controller.message("_enters the room_", model.dungeon_key)
-        //    m.redraw()
-        //})
-    }
+ev.on('controller/move', (room)=> {
+    ev.emit("model/beforemoved")
+    model.room = room
+    model.enterdate = new Date()
+    ev.emit("model/moved")
+    m.redraw()
 })
 
 module.exports = model

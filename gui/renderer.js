@@ -52,10 +52,14 @@ const Message = {
 const Aside = {
   view: () => {
     return m("aside", [
+        m(".key", "room: "+model.room),
+        m(".peopleinroom",model.peopleinroom.map((person)=>{
+            return m(".person", person)
+        }))
       // dungeon
-      m(".dungeon", m.trust( md.render(model.dungeon) )),
+      //m(".dungeon", m.trust( md.render(model.dungeon) )),
       // map
-      m(Map)
+      //m(Map)
     ])
   }
 }
@@ -121,7 +125,7 @@ const Hello = {
           m(".key", "your key: "+model.my_key),
           m("button.toggle", "▼"),
         ]),
-        m(Bag),
+        //m(Bag),
         m(Input)
       ])
     ])
