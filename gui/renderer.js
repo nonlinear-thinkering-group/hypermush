@@ -54,7 +54,7 @@ const Aside = {
     return m("aside", [
         m(".key", "room: "+model.room),
         m(".peopleinroom",model.peopleinroom.map((person)=>{
-            return m(".person", person)
+            return m(".person", model.names[person])
         }))
       // dungeon
       //m(".dungeon", m.trust( md.render(model.dungeon) )),

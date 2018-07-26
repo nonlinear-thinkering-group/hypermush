@@ -8,10 +8,18 @@ let controller = {
         }
 
         if(write){
+
+            //get last message
+            let order = 0
+            let last = model.messages[model.messages.length-1]
+            if(last) order = last.order
+
+
             const me = {
                 text: message,
                 date: new Date(),
-                user: model.my_key
+                user: model.my_key,
+                order: order
             }
             ev.emit("controller/message", me)
         }
