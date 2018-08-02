@@ -45,9 +45,9 @@ ev.on('dat/colors', (colors) => {m.redraw()
 
 ev.on('dat/messages', (messages) => {
     model.messages = messages
-        .filter((a)=>{
-            return (new Date(a.date) >= model.enterdate)
-        })
+        //.filter((a)=>{
+        //    return (new Date(a.date) >= model.enterdate)
+        //})
         .sort((a,b)=>{
             return a.order - b.order
         })

@@ -85,6 +85,7 @@ const Hello = {
         m(Aside)
       ]),
       m(".bottom", [
+        m(".key", "your key: "+model.my_key),
         m(Input)
       ])
     ])
